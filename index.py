@@ -24,7 +24,7 @@ app = Flask(__name__)
 
 
 def get_weather(city):
-    url = "http://api.openweathermap.org/data/2.5/forecast/daily?q={}&cnt=10&mode=json&units=metric".format(city)
+    url = "http://api.openweathermap.org/data/2.5/forecast/daily?q={}&cnt=7&mode=json&units=metric".format(city)
     response = urlopen(url).read().decode('utf-8')
     return response
 
@@ -50,7 +50,8 @@ def index():
         mini = d.get('temp').get('min')
         maxi = d.get('temp').get('max')
         description = d.get('weather')[0].get('description')
-        forecast_list.append((day, mini, maxi, description))
+        deg = d.get('deg')
+        forecast_list.append((day, mini, maxi, description, deg))
     response = make_response(render_template('index.html', forecast_list=forecast_list, city=city, country=country))
     if request.args.get('remember'):
         response.set_cookie('last_city', '{}, {}'.format(city, country), expires=datetime.datetime.today() + datetime.timedelta(days=365))
